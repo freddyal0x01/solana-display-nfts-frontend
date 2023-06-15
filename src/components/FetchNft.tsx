@@ -4,13 +4,12 @@ import { FC, useEffect, useState } from "react"
 import styles from "../styles/custom.module.css"
 
 export const FetchNft: FC = () => {
-  const [nftData, setNftData] = useState(null)
+  const [nftData, setNftData] = useState([])
 
   const { connection } = useConnection()
   const wallet = useWallet()
   const metaplex = Metaplex.make(connection).use(walletAdapterIdentity(wallet))
 
-  // fetch nfts
   const fetchNfts = async () => {
     if (!wallet.connected) {
       return
@@ -20,7 +19,8 @@ export const FetchNft: FC = () => {
     const nfts = await metaplex
       .nfts()
       .findAllByOwner({ owner: wallet.publicKey })
-      .run()
+
+    console.log(nfts)
 
     // fetch off chain metadata for each NFT
     let nftData = []
@@ -34,7 +34,7 @@ export const FetchNft: FC = () => {
     setNftData(nftData)
   }
 
-  // fetch nfts when connected wallet changes
+  // fetch nfts when the connected wallet changes
   useEffect(() => {
     fetchNfts()
   }, [wallet])

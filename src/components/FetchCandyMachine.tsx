@@ -5,19 +5,15 @@ import { FC, useEffect, useState } from "react"
 import styles from "../styles/custom.module.css"
 
 export const FetchCandyMachine: FC = () => {
-  const [candyMachineAddress, setCandyMachineAddress] = useState(
-    "9tQLFyLeaUwQ1PN2YDiFztZDxu4KT6px8CBYEapkshAD"
-  )
+  const [candyMachineAddress, setCandyMachineAddress] = useState("")
   const [candyMachineData, setCandyMachineData] = useState(null)
   const [pageItems, setPageItems] = useState(null)
   const [page, setPage] = useState(1)
-
   const { connection } = useConnection()
   const metaplex = Metaplex.make(connection)
 
-  // fetch candymachine by address
   const fetchCandyMachine = async () => {
-    // reset page to 1
+    // Set page to 1 - we wanna be at the first page whenever we fetch a new Candy Machine
     setPage(1)
 
     // fetch candymachine data
@@ -25,7 +21,6 @@ export const FetchCandyMachine: FC = () => {
       const candyMachine = await metaplex
         .candyMachines()
         .findByAddress({ address: new PublicKey(candyMachineAddress) })
-        .run()
 
       setCandyMachineData(candyMachine)
     } catch (e) {
@@ -52,7 +47,6 @@ export const FetchCandyMachine: FC = () => {
     setPageItems(nftData)
   }
 
-  // previous page
   const prev = async () => {
     if (page - 1 < 1) {
       setPage(1)
@@ -61,7 +55,6 @@ export const FetchCandyMachine: FC = () => {
     }
   }
 
-  // next page
   const next = async () => {
     setPage(page + 1)
   }
@@ -84,7 +77,7 @@ export const FetchCandyMachine: FC = () => {
       <input
         type="text"
         className="form-control block mb-2 w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none text-center"
-        placeholder="Enter Candy Machine v2 Address"
+        placeholder="Enter Candy Machine Address"
         onChange={(e) => setCandyMachineAddress(e.target.value)}
       />
       <button
